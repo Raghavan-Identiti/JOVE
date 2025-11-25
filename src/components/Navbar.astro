@@ -1,0 +1,175 @@
+---
+import qs from "qs";
+
+const homePageQuery = qs.stringify({
+  populate : [
+    "header.logoText",
+    "header.microCourses",
+    "header.pricing",
+    "header.about",
+    "header.ctaButton",
+    "header.freeTrialButton",
+    "header.logoImage",
+    "header.logoImageUrl",
+    "footer.logoText",
+    "footer.socialLink",
+  ],
+}, { encodeValuesOnly: true });
+
+async function getStrapiData(path: string) {
+  const BASE_URL = import.meta.env.PUBLIC_BACKEND_URL;
+  const url = new URL(path, BASE_URL);
+  url.search = homePageQuery;
+
+  try {
+    const res = await fetch(url.href);
+    const json = await res.json();
+    return json.data;
+  } catch (error) {
+    console.error("Strapi fetch error:", error);
+  }
+}
+
+const data = await getStrapiData("/api/global");
+
+const header = data?.header;
+console.log(header);
+
+
+---
+
+	<nav id="container">
+		<!-- Navbar -->
+		<div id="navbar" class="flex justify-between items-center">
+			<!-- Logo -->
+			<a href={header?.logoImageUrl?.url} id="logo" class="text-2xl font-bold">
+                  <img
+                    src={`${import.meta.env.PUBLIC_BACKEND_URL}${header.logoImage.url}`}
+                    alt={header.logoImage.alternativeText || "Hero Image"}
+                    width={143}
+                    height={"auto"}
+                    fetchpriority="high"
+                />
+			</a>
+
+			<!-- Navigation Links -->
+			<div id="nav-links" class="flex gap-8">
+				<a href={header?.microCourses?.url} class="text-lg">{header?.microCourses?.text || 'NavLink'}</a>
+				<a href={header?.about?.url} class="text-lg">{header?.about?.text || 'NavLink'}</a>
+				<a href={header?.pricing?.url} class="text-lg">{header?.pricing?.text || 'NavLink'}</a>
+			</div>
+            
+			<!-- Free Trial Button -->
+			<div id="nav-ctas" class="flex ">
+				<a href={header?.ctaButton?.url} class="text-lg">{header?.ctaButton?.text || 'NavLink'}</a>
+                <button class="btn-free-trial">
+                    <a  href={header?.freeTrialButton?.url}>
+                        {header?.freeTrialButton?.text}
+                    </a>
+                </button>
+            </div>
+		</div>
+	</nav>
+<style>
+
+	#container {
+		font-family: Inter,sans-serif;
+		height: 100%;
+		position: sticky;
+		top: 0px;
+    	z-index: 1000;
+		
+	}
+
+	/* Navbar */
+	#navbar {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 16px 100px;
+		background-color: #fff;
+
+	}
+
+	#logo {
+		text-decoration: none;
+		color: #111827;
+		font-size: 24px;
+		font-weight: bold;
+	}
+
+	#nav-links {
+		display: flex;
+		gap: 20px;
+	}
+
+	#nav-links a {
+		text-decoration: none;
+		color: #111827;
+		font-size: 16px;
+		font-weight: 500;
+		transition: color 0.3s ease;
+	}
+
+	#nav-links a:hover {
+		color: rgb(78, 80, 86);
+	}
+	#nav-ctas a {
+		text-decoration: none;
+		color: #111827;
+		font-size: 16px;
+		font-weight: 500;
+		transition: color 0.3s ease;
+	}
+	#nav-ctas button {
+		text-decoration: none;
+		color: #ffffff;
+		font-size: 16px;
+		font-weight: 500;
+        border: none;
+	}
+	#nav-ctas button a{
+		text-decoration: none;
+		color: #ffffff;
+	}
+
+	#nav-ctas a:hover {
+		color: rgb(78, 80, 86);
+	}
+
+
+
+	.btn-free-trial {
+    background: rgb(33, 131, 237);
+    border-radius: 100px;
+    margin-left: 8px;
+    color: rgb(255, 255, 255);
+    font-family: Inter;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    letter-spacing: -0.16px;
+    text-align: center;
+    padding: 14px 24px;
+    text-decoration: none;
+	}
+
+	.btn-free-trial:hover {
+		background-color: #bc52ee;
+	}
+
+	/* Responsive Design */
+	@media screen and (max-width: 768px) {
+		#navbar {
+			flex-direction: column;
+			align-items: flex-start;
+		}
+
+		#nav-links {
+			flex-direction: column;
+			gap: 10px;
+			margin-top: 10px;
+		}
+	}
+</style>

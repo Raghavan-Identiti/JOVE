@@ -1,0 +1,345 @@
+---
+import { Image } from "astro:assets";
+import qs from "qs";
+import footerSideArrow from "../assets/FooterSideArrow.svg";
+import copyrightIcon from '../assets/copyrightIcon.svg'
+const homePageQuery = qs.stringify(
+	{
+		populate: {
+			footer: {
+				populate: "*",
+			},
+		},
+	},
+	{ encodeValuesOnly: true },
+);
+
+async function getStrapiData(path: string) {
+	const BASE_URL = import.meta.env.PUBLIC_BACKEND_URL;
+	const url = new URL(path, BASE_URL);
+	url.search = homePageQuery;
+
+	try {
+		const res = await fetch(url.href);
+		const json = await res.json();
+		return json.data;
+	} catch (error) {
+		console.error("Strapi fetch error:", error);
+	}
+}
+
+const data = await getStrapiData("/api/global");
+const footer = data?.footer ?? [];
+
+// Extract components
+const footerHead = footer.find(
+	(f: any) => f.__component === "components.footer-head",
+);
+const footerCourses = footer.filter(
+	(f: any) => f.__component === "components.footer-course",
+);
+const footerCTA = footer.find(
+	(f: any) => f.__component === "components.four-button-cta",
+);
+const footerBottom = footer.find(
+	(f: any) => f.__component === "components.footer-bottom",
+);
+---
+
+<div class="footer-wrapper">
+	<div class="footer-top">
+		<img
+			alt="FooterLogo"
+			src={`${import.meta.env.PUBLIC_BACKEND_URL}${footerHead?.footerLogo?.url}`}
+			class="footer-logo"
+		/>
+
+		<p class="footer-head-text">
+			{footerHead?.footerHeadContent}
+			<a class="footer-head-link">
+				<span class="footer-head-link-span">JoVE</span>
+				<Image
+					class="footer-head-arrow"
+					src={footerSideArrow}
+					alt={"footerSideArrow"}
+				/>
+			</a>
+		</p>
+	</div>
+
+	<div class="footer-middle">
+		<div class="footer-grid">
+			{
+				footerCourses.map((course: any) => (
+					<div class="footer-grid-column">
+						<div class="footer-grid-title">
+							{course.courseHeading}
+						</div>
+
+						{course.firstCourse && (
+							<div class="footer-grid-item">
+								{course.firstCourse.text}
+							</div>
+						)}
+
+						{course.secondCourse && (
+							<div class="footer-grid-item">
+								{course.secondCourse.text}
+							</div>
+						)}
+
+						{course.thirdCourse && (
+							<div class="footer-grid-item">
+								{course.thirdCourse.text}
+							</div>
+						)}
+
+						{course.fourthCourse && (
+							<div class="footer-grid-item">
+								{course.fourthCourse.text}
+							</div>
+						)}
+					</div>
+				))
+			}
+		</div>
+		<div class="footer-cta">
+			<div class="footer-cta-primary">
+				<button>{footerCTA?.firstButton?.title}
+					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg>
+				</button>
+			</div>
+			<div class="footer-cta-secondary">
+				<button>{footerCTA?.secondButton?.title}
+					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg>
+				</button>
+			</div>
+			<div class="footer-cta-secondary">
+				<button>{footerCTA?.thirdButton?.title}
+					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg>
+				</button>
+			</div>
+			<div class="footer-cta-secondary">
+				<button>{footerCTA?.fourthButton?.title}
+					<svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path fill="none" d="M0 0h24v24H0V0z"></path><path d="M8.59 16.59 13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z"></path></svg>
+				</button>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="footer-bottom">
+		<div class="footer-bottom-links">
+			<div class="footer-bottom-link">
+				<a href={footerBottom?.footerBottomAboutLink?.url}>
+					{footerBottom?.footerBottomAboutLink?.text}
+				</a>
+			</div>
+			<div class="footer-bottom-link">
+				<a href={footerBottom?.footerBottomHelpLink?.url}>
+					{footerBottom?.footerBottomHelpLink?.text}
+				</a>
+			</div>
+			<div class="footer-bottom-link">
+				<a href={footerBottom?.footerBottomPrivacyLink?.url}>
+					{footerBottom?.footerBottomPrivacyLink?.text}
+				</a>
+			</div>
+		</div>
+		<div class="footer-copyrightText">
+			<Image 
+				src={copyrightIcon}
+				alt={"copyrightIcon"}
+			/>
+			<p>
+				{footerBottom?.copyrightText}
+			</p>
+		</div>
+	</div>
+</div>
+
+<style>
+	/* Footer */
+	/* ROOT FOOTER WRAPPER */
+	.footer-wrapper {
+		background-color: rgb(26, 26, 26);
+		color: rgb(255, 255, 255);
+		font-family: Inter;
+	}
+
+	/* TOP SECTION */
+	.footer-top {
+		padding: 36px 120px 40px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	.footer-logo {
+		transform: none;
+		transition: transform 0.3s;
+	}
+
+	.footer-head-text {
+		margin: 0px;
+		color: var(--Background, #faf9f5);
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+		display: flex;
+	}
+
+	.footer-head-link {
+		text-decoration: none;
+		cursor: pointer;
+	}
+
+	.footer-head-link-span {
+		color: var(--Background, #faf9f5);
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+		text-decoration-line: underline;
+		margin-left: 5px;
+		cursor: pointer;
+	}
+
+	.footer-head-arrow {
+		width: 12px;
+		height: 12px;
+		margin-left: 3px;
+		cursor: pointer;
+	}
+
+	/* MIDDLE SECTION */
+	.footer-middle {
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		border-top: 1px solid rgb(63, 63, 63);
+		padding: 40px 120px;
+		gap: 96px;
+	}
+
+	/* LEFT GRID */
+	.footer-grid {
+		flex: 3 1 0%;
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		color: rgb(204, 204, 204);
+	}
+
+	.footer-grid-column {
+		margin-bottom: 48px;
+	}
+
+	.footer-grid-column:last-child {
+		margin-bottom: 0;
+	}
+
+	.footer-grid-title {
+		font-weight: 700;
+		font-size: 16px;
+		color: rgb(255, 255, 255);
+		margin-bottom: 14px;
+		font-style: normal;
+		line-height: normal;
+	}
+
+	.footer-grid-item {
+		font-size: 16px;
+		font-weight: 400;
+		margin-bottom: 14px;
+		cursor: pointer;
+		color: rgb(204, 204, 204);
+		pointer-events: auto;
+		font-style: normal;
+		line-height: normal;
+	}
+
+	/* CTA RIGHT SECTION */
+	.footer-cta {
+		flex: 1 1 0%;
+		justify-content: start;
+	}
+
+	.footer-cta-primary button {
+		width: 100%;
+		background-color: rgb(33, 131, 237);
+		color: white;
+		border: none;
+		border-radius: 8px;
+		margin: 0px 0px 8px;
+		cursor: pointer;
+		padding: 16px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-family: Inter;
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
+
+	.footer-cta-secondary button {
+		width: 100%;
+		color: rgb(179, 179, 179);
+		background-color: transparent;
+		border: none;
+		border-radius: 0px;
+		margin: 20px 0px 8px;
+		cursor: pointer;
+		padding: 12px 16px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		font-family: Inter;
+		font-size: 16px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
+
+	/* BOTTOM SECTION */
+	.footer-bottom {
+		border-top: 1px solid rgb(68, 68, 68);
+		padding: 40px 120px 36px;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		flex-wrap: wrap;
+		justify-content: space-between;
+		color: rgb(255, 255, 255);
+		font-family: Inter;
+		font-size: 14px;
+		font-style: normal;
+		font-weight: 400;
+		line-height: normal;
+	}
+
+	.footer-bottom-links {
+		display: flex;
+		gap: 40px;
+		flex-wrap: wrap;
+	}
+
+	.footer-bottom-link a {
+		text-decoration: none;
+		color: #fff;
+		cursor: pointer;
+	}
+	.footer-copyrightText{
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 10px;
+	}
+	.footer-copyrightText img{
+		width: 18px;
+		height: auto;
+	}
+</style>

@@ -1,0 +1,120 @@
+---
+import qs from "qs";
+
+const homePageQuery = qs.stringify(
+	{
+		populate: {
+			impactSection: {
+				populate: "*",
+			},
+		},
+	},
+	{ encodeValuesOnly: true },
+);
+
+async function getStrapiData(path: string) {
+	const BASE_URL = import.meta.env.PUBLIC_BACKEND_URL;
+	const url = new URL(path, BASE_URL);
+	url.search = homePageQuery;
+
+	try {
+		const res = await fetch(url.href);
+		const json = await res.json();    
+		return json.data;
+	} catch (error) {
+		console.error("Strapi fetch error:", error);
+	}
+}
+
+const data = await getStrapiData("/api/home-page");
+const impactSection = data?.impactSection?.find(
+	(b: any) => b.__component === "components.section9",
+);
+---
+
+<section class="impact-section">
+  <h2>{impactSection?.section9Heading1}</h2>
+
+  <div class="impact-grid">
+    <div class="impact-item">
+      <h3>{impactSection?.section9SubHeading1}</h3>
+      <p>{impactSection?.section9Para1}</p>
+    </div>
+
+    <div class="impact-item">
+      <h3>{impactSection?.section9SubHeading2}</h3>
+      <p>{impactSection?.section9Para2}</p>
+    </div>
+
+    <div class="impact-item">
+      <h3>{impactSection?.section9SubHeading3}</h3>
+      <p>{impactSection?.section9Para3}</p>
+    </div>
+  </div>
+</section>
+
+<style>
+    /* Section Wrapper */
+.impact-section {
+  text-align: center;
+  padding: 60px 20px;
+  background: rgb(246, 246, 247);
+  font-family: Arial, sans-serif;
+}
+
+.impact-section h2 {
+  font-size: 32px;
+  margin-bottom: 60px;
+  font-weight: 600;
+}
+
+/* Grid Layout */
+.impact-grid {
+  display: flex;
+  justify-content: center;
+  gap: 80px;
+  flex-wrap: wrap;
+}
+
+/* Individual Item */
+.impact-item {
+  max-width: 250px;
+  padding: 0 20px;
+  border-right: 1px solid #dcdcdc;
+}
+
+.impact-item:last-child {
+  border-right: none;
+}
+
+.impact-item h3 {
+  font-size: 48px;
+  color: #1a73e8;
+  margin: 0 0 15px;
+}
+
+.impact-item p {
+  font-size: 16px;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .impact-grid {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .impact-item {
+    border-right: none;
+    border-bottom: 1px solid #dcdcdc;
+    padding-bottom: 20px;
+  }
+
+  .impact-item:last-child {
+    border-bottom: none;
+  }
+}
+
+</style>
