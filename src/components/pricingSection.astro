@@ -1,7 +1,7 @@
 ---
 import qs from "qs";
 import mostPopular from "../assets/mostPopular.svg";
-import Pricecut from "../assets/Pricecut.svg";
+import pricecut from "../assets/Pricecut.svg";
 import priceDiscountIcon from "../assets/priceDiscountIcon.png";
 import { Image } from "astro:assets";
 const homePageQuery = qs.stringify(
@@ -70,7 +70,7 @@ const section7 = data?.section7?.find(
               <h3 class="price-text">$16/month</h3>
             </div>
 
-            <Image alt="Pricecut" src={Pricecut} class="pricecut-img" />
+            <Image alt="Pricecut" src={pricecut} class="pricecut-img" />
 
             <hr class="card-divider" />
 
