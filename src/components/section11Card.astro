@@ -44,14 +44,14 @@ const cardSection  = data?.cardSection?.find(
             <p
                 style="margin-bottom: 16px; color: rgb(255, 255, 255); font-family: Inter; font-size: 32px; font-style: normal; font-weight: 600; line-height: normal; width: 40%;"
             >
-                {cardSection.cardHeading}
+                {cardSection?.cardHeading}
             </p><p
                 style="margin-bottom: 56px; color: rgb(255, 255, 255); font-family: Inter; font-size: 16px; font-style: normal; font-weight: 400; line-height: 150%; width: 40%;"
             >
-                {cardSection.cardPara}
+                {cardSection?.cardPara}
             </p><button
                 style="padding: 14px 32px; width: 100%; max-width: 320px; border: 1px solid rgb(255, 255, 255); border-radius: 100px; background: transparent; font-family: Inter; font-size: 16px; font-style: normal; font-weight: 600; line-height: normal; cursor: pointer;"
-                >{cardSection.cardButtonContent}</button
+                >{cardSection?.cardButtonContent}</button
             ><Image
                 alt="bannerPattern"
                 src={section11CardImage}

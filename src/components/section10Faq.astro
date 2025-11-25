@@ -113,10 +113,10 @@ const faqSection = data?.faqSection?.find(
 
   <div class="faq-container">
 
-    <h2 class="faq-heading">{faqSection.faqSectionHeading}</h2>
+    <h2 class="faq-heading">{faqSection?.faqSectionHeading}</h2>
 
     <!-- FAQ LIST -->
-    {Array.from({ length: 10 }).map((_, index) => {
+    {Array?.from({ length: 10 }).map((_, index) => {
       const q = faqSection[`faqSectionQuestion${index + 1}`];
       const a = faqSection[`faqSectionAnswer${index + 1}`];
 
