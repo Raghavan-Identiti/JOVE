@@ -48,11 +48,13 @@ const footerBottom = footer.find(
 
 <div class="footer-wrapper">
 	<div class="footer-top">
+		{footerHead && footerHead?.footerLogo && (
 		<img
 			alt="FooterLogo"
 			src={`${import.meta.env.PUBLIC_BACKEND_URL}${footerHead?.footerLogo?.url}`}
 			class="footer-logo"
 		/>
+		)}
 
 		<p class="footer-head-text">
 			{footerHead?.footerHeadContent}
