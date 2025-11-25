@@ -1,6 +1,6 @@
 ---
 import qs from "qs";
-import section10FaqArrow from '../assets/section10FaqArrow.svg'
+import section10FaqArrow from "../assets/section10FaqArrow.svg";
 import { Image } from "astro:assets";
 
 const homePageQuery = qs.stringify(
@@ -26,114 +26,115 @@ async function getStrapiData(path: string) {
 
 const data = await getStrapiData("/api/home-page");
 const faqSection = data?.faqSection?.find(
-    (b: any) => b.__component === "layout.faq-section",
+  (b: any) => b.__component === "layout.faq-section",
 );
 ---
+
 <style>
-.faq-container {
-  max-width: 805px;
-  min-width: 805px;
-  margin: 0 auto;
-  padding: 0;
-  font-family: Inter, sans-serif;
-}
+  .faq-container {
+    max-width: 805px;
+    min-width: 805px;
+    margin: 0 auto;
+    padding: 0;
+    font-family: Inter, sans-serif;
+  }
 
-.faq-heading {
-  text-align: center;
-  margin-bottom: 64px;
-  font-family: Inter;
-  font-size: 36px;
-  font-weight: 600;
-  line-height: normal;
-}
+  .faq-heading {
+    text-align: center;
+    margin-bottom: 64px;
+    font-family: Inter;
+    font-size: 36px;
+    font-weight: 600;
+    line-height: normal;
+  }
 
-/* FAQ Item */
-.faq-item {
-  border: none;
-  border-radius: 8px;
-  box-shadow: none;
-  padding: 24px;
-  cursor: pointer;
-  transition: 0.3s ease-in-out;
-  border: 0.5px solid transparent;
-}
+  /* FAQ Item */
+  .faq-item {
+    border: none;
+    border-radius: 8px;
+    box-shadow: none;
+    padding: 24px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    border: 0.5px solid transparent;
+  }
 
-.faq-item:first-child {
-  border: 0.5px solid #ccc;
-  box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
-}
+  .faq-item:first-child {
+    border: 0.5px solid #ccc;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  }
 
-/* Question Row */
-.faq-question {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: Inter, sans-serif;
-  font-size: 20px;
-  font-weight: 500;
-  margin-bottom: 0px;
-}
+  /* Question Row */
+  .faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: Inter, sans-serif;
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 0px;
+  }
 
-/* Arrow icon */
-.faq-arrow {
-  width: 12px;
-  height: 6px;
-  transition: transform 0.3s ease;
-  transform: rotate(180deg);
-}
+  /* Arrow icon */
+  .faq-arrow {
+    width: 12px;
+    height: 6px;
+    transition: transform 0.3s ease;
+    transform: rotate(180deg);
+  }
 
-/* Answer */
-.faq-answer {
-  color: rgb(71, 71, 71);
-  font-family: Inter;
-  font-size: 15px;
-  font-weight: 400;
-  line-height: 140%;
-  margin-top: 16px;
-  width: 90%;
-  display: none;
-}
+  /* Answer */
+  .faq-answer {
+    color: rgb(71, 71, 71);
+    font-family: Inter;
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 140%;
+    margin-top: 16px;
+    width: 90%;
+    display: none;
+  }
 
-/* When Open */
-.faq-item.open {
-  border: 0.5px solid #ccc;
-  box-shadow: 0px 2px 4px rgba(0,0,0,0.05);
-}
+  /* When Open */
+  .faq-item.open {
+    border: 0.5px solid #ccc;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+  }
 
-.faq-item.open .faq-arrow {
-  transform: rotate(0deg);
-}
+  .faq-item.open .faq-arrow {
+    transform: rotate(0deg);
+  }
 
-.faq-item.open .faq-answer {
-  display: block;
-}
+  .faq-item.open .faq-answer {
+    display: block;
+  }
 </style>
 
 <section class="faq-section">
-
   <div class="faq-container">
-
     <h2 class="faq-heading">{faqSection?.faqSectionHeading}</h2>
 
     <!-- FAQ LIST -->
-    {Array?.from({ length: 10 }).map((_, index) => {
-      const q = faqSection[`faqSectionQuestion${index + 1}`];
-      const a = faqSection[`faqSectionAnswer${index + 1}`];
+    {
+      faqSection &&
+        Array?.from({ length: 10 }).map((_, index) => {
+          const q = faqSection[`faqSectionQuestion${index + 1}`];
+          const a = faqSection[`faqSectionAnswer${index + 1}`];
 
-      return (
-        <div class="faq-item" data-faq>
-          <div class="faq-question">
-            {q}
-            <Image alt="Arrow" src={section10FaqArrow} class="faq-arrow" />
-          </div>
-
-          {a && <p class="faq-answer">{a}</p>}
-        </div>
-      );
-    })}
-
+          // Only render the item if a question exists
+          return q ? (
+            <div class="faq-item" data-faq>
+              {" "}
+              <div class="faq-question">
+                {q}{" "}
+                <Image alt="Arrow" src={section10FaqArrow} class="faq-arrow" /> {" "}
+              </div>
+              {a && <p class="faq-answer">{a}</p>}{" "}
+            </div>
+          ) : null;
+        })
+    }
   </div>
-
 </section>
 
 <!-- Accordion Script -->
@@ -146,4 +147,3 @@ const faqSection = data?.faqSection?.find(
     });
   });
 </script>
-
